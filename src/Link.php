@@ -1,8 +1,6 @@
 <?php
 
-namespace Oblik\LinkField;
-
-use Kirby\Toolkit\Html;
+namespace Zeitpulse\LinkField;
 
 class Link
 {
@@ -17,13 +15,7 @@ class Link
         $this->file = null;
 
         if ($this->value()) {
-            if ($this->type() === 'page') {
-                $this->page = kirby()->page($this->value());
-            }
-
-            if ($this->type() === 'file') {
-                $this->file = kirby()->file($this->value());
-            }
+            $this->resolveUrl();
         }
     }
 
@@ -34,7 +26,7 @@ class Link
 
     function __toString()
     {
-        return $this->href();
+        return $this->url();
     }
 
     public function title()
@@ -66,63 +58,45 @@ class Link
 
     public function url()
     {
-        $value = null;
-
-        if ($this->type() === 'url') {
-            $value = $this->value();
-        } else if ($this->type() === 'page' && $this->page()) {
-            $value = $this->page()->url();
-        } else if ($this->type() === 'file' && $this->file()) {
-            $value = $this->file()->url();
-        }
-
-        if (is_string($value) && $this->hash()) {
-            $value .= '#' . $this->hash();
-        }
-
-        return $value;
+        return $this->resolveUrl();
     }
 
-    public function href()
-    {
-        if ($this->type() === 'tel') {
-            return 'tel:' . preg_replace('![^0-9\+]+!', '', $this->value());
-        } else if ($this->type() === 'email') {
-            return 'mailto:' . $this->value();
+    public function resolveUrl() {
+        if (self::type_of_url($this->value()) === 'url') {
+            return $this->value();
         } else {
-            return $this->url();
+            if (self::type_of_url($this->value()) === 'file') {
+                if (!$this->file) {
+                    if ($this->type() === 'file') {
+                        $this->file = kirby()->file($this->value());
+                    }
+                }
+                return $this->file()->url();
+            } else if (self::type_of_url($this->value()) === 'page') {
+                if (!$this->page) {
+                    $this->page = kirby()->page($this->value());
+                }
+                return $this->page()->url();
+            }
         }
     }
 
-    public function attrData($customData = [])
-    {
-        $data = [
-            'href' => $this->href()
-        ];
+    private function type() {
+        return self::type_of_url($this->value());
+    }
 
-        if ($this->popup() === true) {
-            $data['target'] = '_blank';
+    public static function type_of_url($url) {
+        if (empty($url) || preg_match('/^(javascript|tel|http[s]{0,1}|mailto)\:/', $url)) {
+            return 'url';
+        } else {
+            $fileExtension = pathinfo($url)['extension'] ?? null;
+            if (!$fileExtension || $fileExtension === 'html') {
+                return 'page';
+            } else {
+                return 'file';
+            }
         }
-
-        return array_merge($data, $customData);
+        return null;
     }
 
-    public function attr($customAttr = [])
-    {
-        $data = $this->attrData($customAttr);
-
-        $currentRel = $data['rel'] ?? null;
-        $currentTarget = $data['target'] ?? null;
-        $data['rel'] = Html::rel($currentRel, $currentTarget);
-
-        return Html::attr($data);
-    }
-
-    public function tag($attr = [])
-    {
-        // href is null - probably due to page no longer found (slug change); fail silently
-        if (is_null($this->href())) return;
-        
-        return Html::a($this->href(), $this->title(), $this->attrData($attr));
-    }
 }

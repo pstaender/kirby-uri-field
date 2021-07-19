@@ -31,10 +31,6 @@
         }"
       ></k-files-field>
 
-      <k-email-field v-else-if="data.type === 'email'" v-model="data.value" />
-
-      <k-tel-field v-else-if="data.type === 'tel'" v-model="data.value" />
-
       <k-box
         v-else
         theme="negative"
@@ -52,6 +48,7 @@ export default {
     endpoints: Object,
     width: String
   },
+  previousStoredUrl: null,
   data: function () {
     return {
       data: this.value,
@@ -87,7 +84,13 @@ export default {
   },
   methods: {
     inputType: function () {
-      this.data.value = undefined
+      if (this.data.value) {
+        if (this.data.value[0] && this.data.value[0].id && this.data.type === 'url') {
+          this.data.value = this.data.value[0].id;
+        } else {
+          this.data.value = undefined;
+        }
+      }
     }
   },
   watch: {
@@ -113,7 +116,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .k-field-header {
-  display: none; // hides the Select buttons
-}
+// .k-field-header {
+//   display: none; // hides the Select buttons
+// }
 </style>

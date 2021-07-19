@@ -3,9 +3,9 @@
 import App from './App.vue'
 import Preview from './Preview.vue'
 
-panel.plugin('oblik/link-field', {
+panel.plugin('pstaender/uri-field', {
   fields: {
-    link: App
+    uri: App
   },
   components: {
     'k-link-field-preview': Preview

@@ -1,27 +1,22 @@
 <?php
 
-namespace Oblik\LinkField;
+namespace Zeitpulse\LinkField;
 
 load([
-    'Oblik\\LinkField\\Link' => 'src/Link.php'
+    'Zeitpulse\\LinkField\\Link' => 'src/Link.php'
 ], __DIR__);
 
 use Kirby\Cms\App;
 use Kirby\Data\Yaml;
 
-App::plugin('oblik/link-field', [
+App::plugin('pstaender/uri-field', [
     'fields' => [
-        'link' => [
+        'uri' => [
             'mixins' => ['pagepicker', 'filepicker'],
             'props' => [
                 'value' => function ($input = null) {
-                    if (is_string($input)) {
-                        // Value comes from a TXT file.
-                        $data = Yaml::decode($input);
-                    } else {
-                        // Value comes from the panel and is serialized.
-                        $data = $input;
-                    }
+                    // Value comes from a TXT file.
+                    $data = Yaml::decode($input);
 
                     if (empty($data['type'])) {
                         // Handles cases where the field was previously of type
@@ -32,8 +27,11 @@ App::plugin('oblik/link-field', [
                         ];
                     }
 
+                    //
+
                     if (!empty($data['value'])) {
                         if (is_string($data['value'])) {
+                            $data['type'] = Link::type_of_url($data['value']);
                             if ($data['type'] === 'page') {
                                 $targetPage = kirby()->page($data['value']);
 
@@ -66,7 +64,7 @@ App::plugin('oblik/link-field', [
                         if (is_array($config)) {
                             $value = $config;
                         } else {
-                            $value = ['url', 'page', 'file', 'email', 'tel'];
+                            $value = ['url', 'page', 'file'];
                         }
                     }
 
@@ -161,11 +159,13 @@ App::plugin('oblik/link-field', [
                 }
 
                 // Store just the id of a file or a page.
-                if ($type === 'page' || $type === 'file') {
+                if ($type === 'page') {
+                    $data['value'] = ($value[0]['id'] ?? null) ? '/'.$value[0]['id'] : null;
+                } else if ($type === 'file') {
                     $data['value'] = $value[0]['id'] ?? null;
                 }
 
-                return $data;
+                return $data['value'];
             }
         ]
     ],
@@ -174,7 +174,7 @@ App::plugin('oblik/link-field', [
         'de' => require_once __DIR__ . '/languages/de.php'
     ],
     'fieldMethods' => [
-        'toLinkObject' => function ($field) {
+        'url' => function ($field) {
             if ($field->isEmpty()) {
                 return null;
             }
@@ -193,7 +193,7 @@ App::plugin('oblik/link-field', [
                 $data['value'] = $field->value();
             }
 
-            return new Link($data);
+            return (new Link($data))->resolveUrl();
         }
     ]
 ]);

@@ -1,6 +1,6 @@
 {
-  "name": "oblik/kirby-link-field",
-  "description": "Kirby 3 field for all types of links.",
+  "name": "pstaender/kirby-uri-field",
+  "description": "Kirby 3 uri field which can be assigned also assigned to a page or a file.",
   "type": "kirby-plugin",
   "license": "MIT",
   "authors": [
@@ -8,6 +8,10 @@
       "name": "Hristiyan Dodov",
       "email": "h.dodov@gmail.com",
       "homepage": "https://dodov.me/"
+    },
+    {
+      "name": "Philipp Ständer",
+      "email": "pstaender@mailbox.org"
     }
   ],
   "scripts": {
@@ -22,6 +26,6 @@
     "oblik/kirby-tester": "^1.2"
   },
   "extra": {
-    "installer-name": "link-field"
+    "installer-name": "uri-field"
   }
 }

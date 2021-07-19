@@ -1,14 +1,5 @@
 <template>
   <k-field v-bind="$props" class="k-link-field">
-    <k-button
-      slot="options"
-      v-if="hasSettings"
-      :icon="isMainScreen ? 'cog' : 'cancel'"
-      @click="switchScreen"
-    >
-      {{ isMainScreen ? $t('label.settings') : $t('label.close') }}
-    </k-button>
-
     <LinkSelect
       v-if="isMainScreen"
       v-model="link"
@@ -17,23 +8,15 @@
       :endpoints="endpoints"
       @input="emitInput"
     ></LinkSelect>
-    <LinkSettings
-      v-else
-      v-model="settingsData"
-      :types="settings"
-      @input="emitInput"
-    ></LinkSettings>
   </k-field>
 </template>
 
 <script>
 import LinkSelect from './LinkSelect.vue'
-import LinkSettings from './LinkSettings.vue'
 
 export default {
   components: {
-    LinkSelect,
-    LinkSettings
+    LinkSelect
   },
   props: {
     value: {
@@ -56,7 +39,6 @@ export default {
     required: Boolean,
 
     options: Array,
-    settings: Object
   },
   data: function () {
     return {
@@ -76,24 +58,9 @@ export default {
         Object.assign(this.data, input)
       }
     },
-    settingsData: {
-      get: function () {
-        return {
-          text: this.data.text,
-          popup: this.data.popup,
-          hash: this.data.hash
-        }
-      },
-      set: function (input) {
-        Object.assign(this.data, input)
-      }
-    },
     isMainScreen: function () {
       return this.screen === 'link'
     },
-    hasSettings: function () {
-      return this.settings !== false
-    }
   },
   methods: {
     emitInput: function () {
