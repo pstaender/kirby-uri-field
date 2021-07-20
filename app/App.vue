@@ -21,7 +21,7 @@ export default {
   props: {
     value: {
       type: Object,
-      default: function () {
+      default: function() {
         // If the field is inside a Structure, it'll have an `undefined` initial
         // value, so this gives a valid default value.
         return {
@@ -38,9 +38,9 @@ export default {
     disabled: Boolean,
     required: Boolean,
 
-    options: Array,
+    options: Array
   },
-  data: function () {
+  data: function() {
     return {
       data: this.value,
       screen: 'link'
@@ -48,30 +48,30 @@ export default {
   },
   computed: {
     link: {
-      get: function () {
+      get: function() {
         return {
           type: this.data.type,
           value: this.data.value
         }
       },
-      set: function (input) {
+      set: function(input) {
         Object.assign(this.data, input)
       }
     },
-    isMainScreen: function () {
+    isMainScreen: function() {
       return this.screen === 'link'
-    },
+    }
   },
   methods: {
-    emitInput: function () {
+    emitInput: function() {
       this.$emit('input', this.data)
     },
-    switchScreen: function () {
+    switchScreen: function() {
       this.screen = this.isMainScreen ? 'options' : 'link'
     }
   },
   watch: {
-    value: function (value) {
+    value: function(value) {
       this.data = Object.assign({}, value)
     }
   }

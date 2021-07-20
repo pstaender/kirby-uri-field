@@ -1,8 +1,16 @@
 <template>
   <div v-if="linkValue">
     <template v-if="isArray(linkValue)">
-      <k-pages-field-preview v-if="linkType === 'page'" v-bind="$props" :value="linkValue" />
-      <k-files-field-preview v-else-if="linkType === 'file'" v-bind="$props" :value="linkValue" />
+      <k-pages-field-preview
+        v-if="linkType === 'page'"
+        v-bind="$props"
+        :value="linkValue"
+      />
+      <k-files-field-preview
+        v-else-if="linkType === 'file'"
+        v-bind="$props"
+        :value="linkValue"
+      />
     </template>
     <p v-else class="k-structure-table-text k-url-field-preview">
       <a
@@ -33,16 +41,16 @@ export default {
     field: Object
   },
   computed: {
-    linkType: function () {
+    linkType: function() {
       return this.value && this.value.type
     },
-    linkValue: function () {
+    linkValue: function() {
       return this.value && this.value.value
     }
   },
   methods: {
     isArray: Array.isArray,
-    handleClick: function (event) {
+    handleClick: function(event) {
       // Prevent the structure from expanding.
       event.stopImmediatePropagation()
     }

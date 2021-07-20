@@ -2,8 +2,9 @@
   "name": "kirby-uri-field",
   "main": "index.js",
   "scripts": {
+    "cleanup": "rm -rf .cache dist",
     "dev": "parcel watch app/index.js --no-source-maps -d ./",
-    "build": "parcel build app/index.js --no-source-maps --experimental-scope-hoisting -d ./"
+    "build": "parcel build app/index.js --no-source-maps -d ./"
   },
   "posthtml": {
     "recognizeSelfClosing": true
@@ -24,6 +25,8 @@
   "license": "MIT",
   "devDependencies": {
     "@vue/component-compiler-utils": "^3.2.2",
+    "node-sass": "^6.0.1",
+    "parcel": "^1.9",
     "vue-template-compiler": "^2.6.14"
   },
   "dependencies": {

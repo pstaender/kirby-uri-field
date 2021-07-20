@@ -11,7 +11,11 @@
     </k-column>
 
     <k-column :width="uiWidth.field">
-      <k-url-field v-if="data.type === 'url'" v-model="data.value" placeholder="https://example.com/" />
+      <k-url-field
+        v-if="data.type === 'url'"
+        v-model="data.value"
+        placeholder="https://example.com/"
+      />
 
       <k-pages-field
         v-else-if="data.type === 'page'"
@@ -49,46 +53,52 @@ export default {
     width: String
   },
   previousStoredUrl: null,
-  data: function () {
+  data: function() {
     return {
       data: this.value,
       updating: false
     }
   },
   computed: {
-    showSelect: function () {
+    showSelect: function() {
       return this.types.length > 1
     },
-    widthPercent: function () {
+    widthPercent: function() {
       var split = this.width.split('/')
       var numerator = split[0] || 1
       var denominator = split[1] || 1
       return (numerator / denominator) * 100
     },
-    uiWidth: function () {
-      var large = (this.widthPercent >= 50)
+    uiWidth: function() {
+      var large = this.widthPercent >= 50
 
       return {
         select: large ? '1/4' : '1/1',
         field: this.showSelect ? (large ? '3/4' : '1/1') : null
       }
     },
-    types: function () {
-      return this.options.map(function (type) {
-        return {
-          value: type,
-          text: this.$t(type)
-        }
-      }.bind(this))
+    types: function() {
+      return this.options.map(
+        function(type) {
+          return {
+            value: type,
+            text: this.$t(type)
+          }
+        }.bind(this)
+      )
     }
   },
   methods: {
-    inputType: function () {
+    inputType: function() {
       if (this.data.value) {
-        if (this.data.value[0] && this.data.value[0].id && this.data.type === 'url') {
-          this.data.value = this.data.value[0].id;
+        if (
+          this.data.value[0] &&
+          this.data.value[0].id &&
+          this.data.type === 'url'
+        ) {
+          this.data.value = this.data.value[0].id
         } else {
-          this.data.value = undefined;
+          this.data.value = undefined
         }
       }
     }
@@ -96,20 +106,22 @@ export default {
   watch: {
     data: {
       deep: true,
-      handler: function (value) {
+      handler: function(value) {
         if (!this.updating) {
           this.$emit('input', value)
         }
       }
     },
-    value: function (value) {
+    value: function(value) {
       this.updating = true
 
       Object.assign(this.data, value)
 
-      this.$nextTick(function () {
-        this.updating = false
-      }.bind(this))
+      this.$nextTick(
+        function() {
+          this.updating = false
+        }.bind(this)
+      )
     }
   }
 }
