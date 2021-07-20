@@ -72,9 +72,11 @@ export default {
     uiWidth: function() {
       var large = this.widthPercent >= 50
 
+      var maxWidth = '5/6' // TODO: 1/1 does not fit, when grid is insdide a grid
+
       return {
-        select: large ? '1/4' : '1/1',
-        field: this.showSelect ? (large ? '3/4' : '1/1') : null
+        select: large ? '1/4' : maxWidth,
+        field: this.showSelect ? (large ? '3/4' : maxWidth) : null
       }
     },
     types: function() {
@@ -100,6 +102,8 @@ export default {
         } else {
           this.data.value = undefined
         }
+      } else {
+        this.data.value = undefined
       }
     }
   },
@@ -128,7 +132,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .k-field-header {
-//   display: none; // hides the Select buttons
-// }
+/deep/ .k-field-header {
+  display: none; // hides the Select buttons
+}
 </style>

@@ -27,8 +27,6 @@ App::plugin('pstaender/uri-field', [
                         ];
                     }
 
-                    //
-
                     if (!empty($data['value'])) {
                         if (is_string($data['value'])) {
                             $data['type'] = Link::type_of_url($data['value']);
@@ -66,6 +64,11 @@ App::plugin('pstaender/uri-field', [
                         } else {
                             $value = ['url', 'page', 'file'];
                         }
+                    }
+
+                    if (!in_array('url', $value)) {
+                        // url is not optional, otherwise page select may produce an error in vue
+                        $value[] = 'url';
                     }
 
                     return $value;
