@@ -62,7 +62,7 @@ App::plugin('pstaender/uri-field', [
                         if (is_array($config)) {
                             $value = $config;
                         } else {
-                            $value = ['url', 'page', 'file'];
+                            $value = ['url', 'page'];
                         }
                     }
 
