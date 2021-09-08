@@ -86,7 +86,7 @@ class Link
     }
 
     public static function type_of_url($url) {
-        if (empty($url) || preg_match('/^(javascript|tel|http[s]{0,1}|mailto)\:/', $url)) {
+        if (empty($url) || $url === '/' || preg_match('/^(javascript|tel|http[s]{0,1}|mailto)\:/', $url)) {
             return 'url';
         } else {
             $fileExtension = pathinfo($url)['extension'] ?? null;
