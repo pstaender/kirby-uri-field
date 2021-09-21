@@ -90,8 +90,12 @@ class Link
             return 'url';
         } else {
             $fileExtension = pathinfo($url)['extension'] ?? null;
-            if (!$fileExtension || $fileExtension === 'html') {
-                return 'page';
+            if (!$fileExtension) {
+                $page = site()->pages()->findByIdRecursive(preg_replace('/^\/+/', '', $url));
+                if ($fileExtension === 'html') {
+                    return 'page';
+                }
+                return ($page) ? 'page' : 'url';
             } else {
                 return 'file';
             }
