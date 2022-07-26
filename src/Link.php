@@ -61,7 +61,8 @@ class Link
         return $this->resolveUrl();
     }
 
-    public function resolveUrl() {
+    public function resolveUrl()
+    {
         if (self::type_of_url($this->value()) === 'url') {
             return $this->value();
         } else {
@@ -81,17 +82,19 @@ class Link
         }
     }
 
-    private function type() {
+    private function type()
+    {
         return self::type_of_url($this->value());
     }
 
-    public static function type_of_url($url) {
+    public static function type_of_url($url)
+    {
         if (empty($url) || $url === '/' || $url[0] === '#' || preg_match('/^(javascript|tel|http[s]{0,1}|mailto)\:/', $url)) {
             return 'url';
         } else {
             $fileExtension = pathinfo($url)['extension'] ?? null;
             if (!$fileExtension) {
-                $page = site()->pages()->findByIdRecursive(preg_replace('/^\/+/', '', $url));
+                $page = site()->pages()->find(preg_replace('/^\/+/', '', $url));
                 if ($fileExtension === 'html') {
                     return 'page';
                 }
@@ -102,5 +105,4 @@ class Link
         }
         return null;
     }
-
 }
