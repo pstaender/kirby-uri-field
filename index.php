@@ -108,7 +108,7 @@ App::plugin('pstaender/uri-field', [
                         'text' => true
                     ]);
 
-                    return $page->panelPickerData($settings);
+                    return $page->panel()->pickerData($settings);
                 },
                 'fileResponse' => function ($file) {
                     $config = $this->files() ?? [];
@@ -118,7 +118,7 @@ App::plugin('pstaender/uri-field', [
                         'text' => true
                     ]);
 
-                    return $file->panelPickerData($settings);
+                    return $file->panel()->pickerData($settings);
                 }
             ],
             'api' => function () {
@@ -163,7 +163,7 @@ App::plugin('pstaender/uri-field', [
 
                 // Store just the id of a file or a page.
                 if ($type === 'page') {
-                    $data['value'] = ($value[0]['id'] ?? null) ? '/'.$value[0]['id'] : null;
+                    $data['value'] = ($value[0]['id'] ?? null) ? '/' . $value[0]['id'] : null;
                 } else if ($type === 'file') {
                     $data['value'] = $value[0]['id'] ?? null;
                 }
